@@ -212,7 +212,8 @@ li:hover {
 }
 #portfolio h2 {
   text-align: center;
-  margin-bottom: 1em;
+  margin-bottom: 36px;
+  margin-top: 10px;
 }
 .gallery {
   width: 100%;
@@ -333,17 +334,6 @@ footer nav ul {
   padding: 2em;
 }
 
-/* 	Login page */
-/* 
-section.login {
-  justify-content: center;
-} */
-
-/* - Faire l'appel à l'API ( POST sur la route du login ) pour récupérer le token */
-/* TEST MODAL  */
-
-/* test h2 */
-
 /* MODAL */
 
 .modal-title {
@@ -388,9 +378,6 @@ section.login {
 
 .js-modal-close {
   align-self: end;
-  /* position: relative;
-  left: 55px;
-  top: 30px; */
   font-size: 22px;
   background-color: white;
   border: none;
@@ -438,6 +425,7 @@ section.login {
   background-color: #e8f1f6;
   height: 200px;
   width: 420px;
+  margin-bottom: 30px;
 }
 
 .newProject {
@@ -452,8 +440,14 @@ section.login {
   font-weight: 600;
   font-size: 16px;
 }
+
+#titleInput,
 .selectProject {
-  height: 37px;
+  height: 51px;
+  padding: 0;
+  border: none;
+  box-shadow: 0px 4px 14px 0px #00000017;
+  margin-bottom: 21px;
 }
 
 .modalProject i {
@@ -470,9 +464,12 @@ section.login {
   display: flex;
   z-index: 0;
   justify-content: center;
+  border: none;
+  background-color: #cbd6dc;
 }
 
 .modalProject input {
+  width: 173px;
   height: 36px;
   opacity: 0;
   padding: 0;
@@ -499,6 +496,6 @@ section.login {
   font-size: 14px;
 }
 .ligne {
-  height: 10px; /* Épaisseur de la ligne */
-  margin: 20px 0; /* Espacement autour de la ligne */
+  height: 10px;
+  margin: 20px 0;
 }

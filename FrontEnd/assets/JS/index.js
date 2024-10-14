@@ -8,8 +8,6 @@ const userId = localStorage.getItem("userId");
 
 // REDIRECTION
 
-// AVOIR
-
 document.getElementById("loginButton").addEventListener("click", function () {
   window.location.href = "login.html";
 });
@@ -24,10 +22,6 @@ if (token) {
     }
   }
 }
-
-// document.getElementById("loginButton").addEventListener("click", function () {
-//   window.location.href = "login.html";
-// });
 
 // RECUPERATION
 
@@ -57,20 +51,16 @@ async function fetchWorks() {
   }
 }
 
-// FONCTION PROJET GALERY
+// FILTRED
 
-// TRIAGE
-
-// Fonction pour créer les boutons de filtre catégorie
 function createFilterButtons(categories) {
   const filterContainer = document.getElementById("category-filters"); // Sélectionne les filtre
   filterContainer.innerHTML = "";
 
-  // BOUTTON TOUS
-
+  // BTN ALL
   const allButton = document.createElement("button");
   allButton.textContent = "Tous";
-  // TEST class css
+
   allButton.classList.add("btn-style");
   allButton.addEventListener("click", async () => {
     const allWorks = await fetchWorks(); // Récupère tous les projets
@@ -78,94 +68,83 @@ function createFilterButtons(categories) {
   });
   filterContainer.appendChild(allButton);
 
-  // Crée un bouton pour chaque catégorie
+  // BTN CATEGORIES
   categories.forEach((category) => {
     const button = document.createElement("button");
     button.textContent = category.name;
     button.classList.add("btn-style");
     button.addEventListener("click", async () => {
-      const allWorks = await fetchWorks(); // Récupère tous les projets
-      const filteredWorks = allWorks.filter((work) => work.categoryId === category.id); // Filtre les projets par catégorie
-      displayWorks(filteredWorks); // Affiche les projets filtrés
+      const allWorks = await fetchWorks();
+      const filteredWorks = allWorks.filter((work) => work.categoryId === category.id);
+      displayWorks(filteredWorks);
     });
-    filterContainer.appendChild(button); // Ajoute le bouton au conteneur des filtres
+    filterContainer.appendChild(button);
   });
 }
 
-// RECUPERATION
+// FETCH
 
-// catégories
+// CATEGORIES
 async function getCategories() {
   return await fetchCategories(); // Appelle la fonction fetchCategories et retourne les catégories
 }
 
-// projetse
+// PROJECT
 async function getWorks() {
   return await fetchWorks(); // Appelle la fonction fetchWorks et retourne les projets
 }
 
-// initialiser l'interface utilisateur
+// INITIALIZE USER / BTN
 function initializeUI(categories, works) {
-  createFilterButtons(categories); // Crée les boutons de filtre avec les catégories
-  displayWorks(works); // Affiche les projets
+  createFilterButtons(categories);
+  displayWorks(works);
   displayWorksModal(works);
-  // test modal init *****************
 }
 
-// INITIALIZE
-
-//initialisation princiaple
+//INITIALIZE
 async function initialize() {
-  const categories = await getCategories(); // Récupère les catégories
-  const works = await getWorks(); // Récupère les projets
-  initializeUI(categories, works); // Initialise l'interface utilisateur avec les données récupérées
+  const categories = await getCategories();
+  const works = await getWorks();
+  initializeUI(categories, works);
 }
 
-function displayWorks(works) {
+// SHOW PROJECT
+
+async function displayWorks(works) {
   const gallery = document.querySelector(".gallery");
   gallery.innerHTML = "";
+  const projects = await fetchWorks();
 
-  // Pour chaque (work) crée un element html
-  works.forEach((work) => {
+  works.forEach((project) => {
     const workItem = document.createElement("div");
     workItem.classList.add("gallery-item");
 
     workItem.innerHTML = `
-            <figure>
-                <img src="${work.imageUrl}" alt="${work.title}">
-                <figcaption>${work.title}</figcaption>
-            </figure>
-        `;
+    <figure>
+      <img src="${project.imageUrl}" alt="${project.title}">
+      <figcaption>${project.title}</figcaption>
+    </figure>
+  `;
 
     gallery.appendChild(workItem);
   });
 }
 
 // CHEK LOGIN
+
 function checkLoginStatus() {
   const loginButton = document.querySelector("#loginButton");
   const token = localStorage.getItem("token");
   if (token) {
-    // L'utilisateur est connecté
     loginButton.textContent = "Logout";
-
-    // Ajouter l'événement de déconnexion
     loginButton.addEventListener("click", function () {
-      // Supprimer le token du localStorage
       localStorage.removeItem("token");
     });
   } else {
-    // L'utilisateur n'est pas connecté
     loginButton.textContent = "Login";
   }
 }
 
-// Appeler la fonction pour vérifier l'état de connexion au chargement de la page
 checkLoginStatus();
 
-// Exécute la fonction initialize une fois que le DOM est complètement chargé
 document.addEventListener("DOMContentLoaded", initialize);
-
-// appl pourt check le token
-
-// A VOIR VERIFICATION PRESENCE BUTTON POUR INDEX !!!!!!!

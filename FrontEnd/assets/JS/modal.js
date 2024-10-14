@@ -1,5 +1,7 @@
 let modal = null;
 
+// OPEN MODAL
+
 const openModal = function (event, targetModal = null) {
   event.preventDefault();
   const target = targetModal || document.querySelector(event.target.getAttribute("href"));
@@ -29,21 +31,20 @@ const stopPropagation = function (event) {
   event.stopPropagation();
 };
 
-// Switch to modal2
+//  SWITCH BACK / MODAL2
+
 const switchModal2 = function (event) {
   event.preventDefault();
   closeModal(event);
   openModal(event, document.querySelector("#modal2"));
 };
 
-// Switch back to modal1
 const switchBack = function (event) {
   event.preventDefault();
   closeModal(event);
   openModal(event, document.querySelector("#modal1"));
 };
 
-// Attach event listeners for modal switching
 document.querySelector(".js-modal-switch").addEventListener("click", switchModal2);
 document.querySelector(".js-modal-back").addEventListener("click", switchBack);
 
@@ -51,7 +52,8 @@ document.querySelectorAll(".js-modal").forEach((a) => {
   a.addEventListener("click", openModal);
 });
 
-// Display works modal with dynamic content
+// DISPLAY WORK
+
 function displayWorksModal(works) {
   const gallery = document.querySelector(".gallery-modal");
 
@@ -75,6 +77,8 @@ function displayWorksModal(works) {
   });
 }
 
+// DELETE
+
 async function deleteWork(workId) {
   const response = await fetch(`http://localhost:5678/api/works/${workId}`, {
     method: "DELETE",
@@ -86,25 +90,26 @@ async function deleteWork(workId) {
 
   if (response.ok) {
     console.log(`Work with ID ${workId} deleted successfully`);
-    // Fetch updated works and display them
+
     const updatedWorks = await fetchWorks();
     displayWorksModal(updatedWorks);
+    displayWorks(updatedWorks);
   } else {
     console.error("Failed to delete work:", response.statusText);
   }
 }
 
-// Attaching submit event for the form to post work
 const form = document.getElementById("newProject");
 
 if (form) {
   form.addEventListener("submit", function (event) {
-    event.preventDefault(); // Prevent default form submission
-    postWork(); // Post work when the form is submitted
+    event.preventDefault();
+    postWork();
   });
 }
 
-// Attaching change event for the file input
+// PREVIEW
+
 const fileInput = document.getElementById("fileInput");
 if (fileInput) {
   fileInput.addEventListener("change", function (event) {
@@ -116,7 +121,6 @@ if (fileInput) {
       const assideIcone = document.querySelector(".assideIcone");
       const buttonContainer = document.querySelector(".modalProject > button");
 
-      // Hide unnecessary elements and display selected image
       btnImage.style.display = "none";
       buttonContainer.style.display = "none";
       assideText.style.display = "none";
@@ -130,7 +134,8 @@ if (fileInput) {
   console.error("L'élément fileInput n'a pas été trouvé.");
 }
 
-// Fetch categories dynamically
+// DYNAMICS CATEGORIES SELECTED
+
 async function fetchCategories() {
   try {
     const response = await fetch("http://localhost:5678/api/categories"); // Fetch categories via API
@@ -143,7 +148,6 @@ async function fetchCategories() {
   }
 }
 
-// Display fetched categories in a select element
 async function afficherCategories() {
   try {
     const categoriesData = await fetchCategories();
@@ -160,10 +164,10 @@ async function afficherCategories() {
   }
 }
 
-// Call the function to display categories
 afficherCategories();
 
-// Post new work (form submission)
+// POST PROJECT
+
 async function postWork() {
   const imageFile = document.querySelector("#fileInput").files[0];
   const titleInput = document.querySelector("#titleInput");
@@ -183,16 +187,36 @@ async function postWork() {
     const response = await fetch("http://localhost:5678/api/works", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`, // Ajouter le token
+        Authorization: `Bearer ${token}`,
       },
       body: formData,
     });
 
     if (response.ok) {
       console.log("Projet posté avec succès !");
-      const updatedWorks = await fetchWorks(); // Fetch updated works
-      displayWorksModal(updatedWorks); // Refresh the works display
-      modal.style.display = "none"; // Close the modal
+
+      // RESET
+      const previewImage = document.getElementById("preview");
+      previewImage.style.display = "none";
+      previewImage.removeAttribute("src");
+
+      const btnImage = document.querySelector(".btn-text");
+      const assideText = document.querySelector(".assideText");
+      const assideIcone = document.querySelector(".assideIcone");
+      const btnText = document.querySelector(".modalProject > button");
+
+      btnImage.style.display = "block";
+      btnText.style.display = "flex";
+      assideText.style.display = "block";
+      assideIcone.style.display = "block";
+
+      titleInput.value = "";
+      categorySelect.selectedIndex = 0;
+
+      const updatedWorks = await fetchWorks();
+      displayWorksModal(updatedWorks);
+      displayWorks(updatedWorks);
+      modal.style.display = "none";
     } else {
       console.error("Erreur lors de l'envoi :", response.statusText);
     }
